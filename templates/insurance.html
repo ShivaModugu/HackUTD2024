@@ -142,12 +142,12 @@
         const questions = [
             {
                 question: "What is the most important factor when choosing an insurance provider?",
-                image: "https://via.placeholder.com/400x300?text=Paris",
+                
                 options: ["A. Affordable Premiums", "B. Comprehensive coverage options", "C. Reputation and reliability"],
             },
             {
                 question: "What is your preffered payment structure for insurance?",
-                image: "https://via.placeholder.com/400x300?text=Mars",
+                
                 options: ["A. Lower monthly premiums with higher out-of-pocket costs", "B. Higher monthly premiums with lower out-of-pocket costs", "C. Flexible options depending on the coverage"],
             },
             {
@@ -157,7 +157,7 @@
             },
             {
                 question: "What is your annual income range?",
-                image: "https://via.placeholder.com/400x300?text=DaVinci",
+                
                 options: ["A. Less than 25k", "B. $25,000–$50,000", "C. $50,000–$75,000", "D. $75,000–$100,000", "E. 100k+"],
             },
             {
@@ -180,7 +180,6 @@
             slide.classList.add("carousel-item");
             if (index === 0) slide.classList.add("active");
             slide.innerHTML = `
-                <img src="${q.image}" class="quiz-image" alt="Question Image">
                 <h2 class="quiz-question">${q.question}</h2>
                 <div class="options-container">
                     ${q.options

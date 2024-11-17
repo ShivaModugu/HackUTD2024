@@ -29,38 +29,6 @@
             }
         }
 
-        .navbar {
-            background-color: #0056b3;
-            color: white;
-            padding: 10px 20px;
-        }
-
-        .navbar .site-name {
-            display: flex;
-            align-items: center;
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: white;
-            text-decoration: none;
-        }
-
-        .navbar .site-name img {
-            height: 40px;
-            margin-right: 10px;
-        }
-
-        .navbar nav {
-            display: flex;
-            gap: 15px;
-        }
-
-        .navbar nav a {
-            color: white;
-            text-decoration: none;
-            font-size: 1rem;
-            font-weight: bold;
-        }
-
         .container {
             margin-top: 50px;
         }
@@ -80,67 +48,181 @@
             box-shadow: 0 6px 15px rgba(0, 0, 0, 0.5);
         }
 
-        .company-details {
-            display: none;
+        .visit-site-btn {
+            display: inline-block;
+            padding: 10px 15px;
+            background-color: #1b98e0;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
             margin-top: 10px;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+            font-weight: bold;
+        }
+
+        .visit-site-btn:hover {
+            background-color: #0056b3;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1100;
+        }
+
+        .popup {
+            background: #007991;
+            color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+            width: 80%;
+            max-width: 500px;
+            text-align: center;
+        }
+
+        .popup h3 {
+            margin-top: 0;
+            color: #1b98e0;
+        }
+
+        .popup button {
+            background-color: #0056b3;
+            border: none;
+            padding: 10px 20px;
+            color: white;
+            border-radius: 5px;
+            margin-top: 15px;
+            cursor: pointer;
+        }
+
+        .popup button:hover {
+            background-color: #003f7f;
+        }
+
+        /* Navbar */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #0056b3;
+            padding: 10px 30px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            color: #fff;
+            font-family: Arial, sans-serif;
+            height: 60px;
+        }
+
+        .navbar .site-name {
+            font-size: 1.5rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar .site-name img {
+            height: 40px;
+            width: 40px;
+            margin-right: 10px;
+        }
+
+        .navbar nav {
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar nav ul {
+            list-style: none;
+            display: flex;
+            gap: 30px;
+            margin: 0;
+        }
+
+        .navbar nav ul li a {
+            text-decoration: none;
+            color: #fff;
+            font-weight: bold;
+            font-size: 1rem;
+            transition: color 0.3s ease;
+        }
+
+        .navbar nav ul li a:hover {
+            color: #cce7ff;
         }
 
         .chat-bubble {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    width: 50px; /* Adjusted size */
-    height: 50px; /* Adjusted size */
-    background-color: #0056b3;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-    cursor: pointer;
-    z-index: 1000;
-}
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            background-color: #0056b3;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            cursor: pointer;
+            z-index: 1000;
+        }
 
-.chat-bubble img {
-    width: 30px; /* Scaled to fit the bubble size */
-    height: 30px; /* Scaled to fit the bubble size */
-}
+        .chat-bubble img {
+            width: 30px;
+            height: 30px;
+        }
 
-.chat-box {
-    position: fixed;
-    bottom: 90px;
-    right: 20px;
-    width: 300px;
-    max-height: 400px;
-    background-color: white;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-    display: none;
-    flex-direction: column;
-    overflow: hidden;
-    z-index: 1000; /* Ensure it stays above other elements */
-}    
-</style>
+        .chat-box {
+            position: fixed;
+            bottom: 90px;
+            right: 20px;
+            width: 300px;
+            max-height: 400px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            z-index: 1000;
+        }
+    </style>
 </head>
 <body>
     <!-- Navbar -->
-    <header class="navbar d-flex justify-content-between">
-        <a href="#" class="site-name">
-            <img src="/static/images/logo.png" alt="FinConnect Logo">
-            FinConnect
-        </a>
+    <header class="navbar">
+        <div class="site-name">
+            <img src="/static/images/logo.png" alt="Logo">
+            MyWebsite
+        </div>
         <nav>
-            <a href="banking">Home</a>
-            <a href="onboarding">Explore</a>
-            <a href="home">Sign Out</a>
+            <ul>
+                <li><a href="#">Home</a></li>
+                <li><a href="#">Explore</a></li>
+                <li><a href="#">Contact</a></li>
+            </ul>
         </nav>
     </header>
 
     <!-- Main Content -->
     <div class="container text-center">
         <h1>Top 3 Companies</h1>
-        <div id="companyList">
-            <p>{{results}}</p>
+        <div id="companyList"></div>
+    </div>
+
+    <!-- Popup -->
+    <div class="popup-overlay" id="popupOverlay">
+        <div class="popup" id="popup">
+            <h3 id="popupTitle">Company Details</h3>
+            <p id="popupContent"></p>
+            <button onclick="closePopup()">Close</button>
         </div>
     </div>
 
@@ -151,37 +233,94 @@
 
     <!-- Chat Box -->
     <div class="chat-box" id="chatBox">
-        <div class="chat-header">Chat with Us</div>
-        <div class="chat-body" id="chatBody"></div>
-        <div class="chat-input">
-            <input type="text" id="chatMessage" placeholder="Type a message...">
-            <button onclick="sendMessage()">Send</button>
+        <div class="chat-header" style="padding: 10px; background: #0056b3; color: white;">
+            Chat with Us
+        </div>
+        <div class="chat-body" id="chatBody" style="flex-grow: 1; padding: 10px; overflow-y: auto;"></div>
+        <div class="chat-input" style="padding: 10px; display: flex; gap: 10px;">
+            <input type="text" id="chatMessage" placeholder="Type a message..." style="flex-grow: 1; padding: 5px;">
+            <button onclick="sendMessage()" style="padding: 5px 10px; background: #0056b3; color: white; border: none; border-radius: 5px;">Send</button>
         </div>
     </div>
-
     <script>
-        // const companies = [
-        //     { name: "Google", description: "Click to view details.", details: "Founded: 1998 | Industry: Technology | Headquarters: Mountain View, CA" },
-        //     { name: "Apple", description: "Click to view details.", details: "Founded: 1976 | Industry: Technology | Headquarters: Cupertino, CA" },
-        //     { name: "Amazon", description: "Click to view details.", details: "Founded: 1994 | Industry: E-commerce | Headquarters: Seattle, WA" }
-        // ];
+        const companies = [
+            {
+                CompanyName: 'Auto-Owners Insurance',
+                PhoneNumber: '517-323-1200',
+                Email: 'contact@auto-owners.com',
+                Review: 4.4,
+                WebsiteURL: 'https://www.auto-owners.com/',
+                PlanName: 'Premier Health',
+                PremiumMonthly: 270.00,
+                OutOfPocketCost: 'Low',
+                PaymentStructure: 'Higher Monthly',
+                BudgetPercentage: 7.20,
+                CoverageType: 'Health'
+            },
+            {
+                CompanyName: 'MassMutual',
+                PhoneNumber: '800-272-2216',
+                Email: 'info@massmutual.com',
+                Review: 4.4,
+                WebsiteURL: 'https://www.massmutual.com/',
+                PlanName: 'Prime Health',
+                PremiumMonthly: 265.00,
+                OutOfPocketCost: 'Low',
+                PaymentStructure: 'Higher Monthly',
+                BudgetPercentage: 6.80,
+                CoverageType: 'Health'
+            },
+            {
+                CompanyName: 'USAA',
+                PhoneNumber: '800-531-8722',
+                Email: 'service@usaa.com',
+                Review: 4.9,
+                WebsiteURL: 'https://www.usaa.com/',
+                PlanName: 'Health Shield',
+                PremiumMonthly: 200.00,
+                OutOfPocketCost: 'Low',
+                PaymentStructure: 'Higher Monthly',
+                BudgetPercentage: 6.00,
+                CoverageType: 'Health'
+            }
+        ];
 
-        // const companyList = document.getElementById("companyList");
+        const companyList = document.getElementById("companyList");
+        const popupOverlay = document.getElementById("popupOverlay");
+        const popupTitle = document.getElementById("popupTitle");
+        const popupContent = document.getElementById("popupContent");
 
-        // companies.forEach((company, index) => {
-        //     const card = document.createElement("div");
-        //     card.classList.add("company-card");
-        //     card.innerHTML = `
-        //         <h2>${company.name}</h2>
-        //         <p>${company.description}</p>
-        //         <div class="company-details" id="details-${index}">${company.details}</div>
-        //     `;
-        //     card.addEventListener("click", () => {
-        //         const details = document.getElementById(`details-${index}`);
-        //         details.style.display = details.style.display === "none" || !details.style.display ? "block" : "none";
-        //     });
-        //     companyList.appendChild(card);
-        // });
+        companies.forEach((company) => {
+            const card = document.createElement("div");
+            card.classList.add("company-card");
+            card.innerHTML = `
+                <h2>${company.CompanyName}</h2>
+                <p><strong>Plan:</strong> ${company.PlanName}</p>
+                <p><strong>Monthly Premium:</strong> $${company.PremiumMonthly}</p>
+                <a class="visit-site-btn" href="${company.WebsiteURL}" target="_blank">Visit Website</a>
+            `;
+            card.addEventListener("click", () => showPopup(company));
+            companyList.appendChild(card);
+        });
+
+        function showPopup(company) {
+            popupTitle.textContent = company.CompanyName;
+            popupContent.innerHTML = `
+                <p><strong>Phone Number:</strong> ${company.PhoneNumber}</p>
+                <p><strong>Email:</strong> ${company.Email}</p>
+                <p><strong>Review:</strong> ${company.Review} ⭐</p>
+                <p><strong>Plan:</strong> ${company.PlanName}</p>
+                <p><strong>Monthly Premium:</strong> $${company.PremiumMonthly}</p>
+                <p><strong>Out-of-Pocket Cost:</strong> ${company.OutOfPocketCost}</p>
+                <p><strong>Payment Structure:</strong> ${company.PaymentStructure}</p>
+                <p><strong>Coverage Type:</strong> ${company.CoverageType}</p>
+            `;
+            popupOverlay.style.display = "flex";
+        }
+
+        function closePopup() {
+            popupOverlay.style.display = "none";
+        }
 
         function toggleChat() {
             const chatBox = document.getElementById("chatBox");
