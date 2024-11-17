@@ -3,49 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sample Design</title>
+    <title>Interactive Design</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/onboarding.css') }}">
+    <script defer src="{{ url_for('static', filename='js/interactivity.js') }}"></script>
 </head>
 <body>
     <!-- Navigation Bar -->
     <header class="navbar">
         <div class="site-name">
-            <img src="https://via.placeholder.com/40" alt="Logo">
+            <img src="/static/images/logo.png" alt="Logo">
             FinConnect
         </div>
         <nav>
             <ul>
                 <li><a href="banking">Home</a></li>
                 <li><a href="onboarding">Explore</a></li>
-                <li><a href="#">Book Online</a></li>
+                <li><a href="home">Sign Out</a></li>
             </ul>
         </nav>
     </header>
 
     <!-- Title Section -->
     <section class="title-section">
-        <h1>I'M A TITLE</h1>
+        <h1>MAKE LIFE EASY</h1>
         <div class="hero-image">
-            <img src="https://via.placeholder.com/600x300" alt="Hero">
+            <img src="/static/images/FinConnect.png" alt="Hero">
         </div>
     </section>
 
     <!-- Content Cards -->
     <section class="content-section">
-        <h2>I'm a title. Click here to edit me</h2>
+        <h2>CLICK ONE TO TAKE QUIZ</h2>
         <div class="cards-container">
-            <div class="card">
+            <a href="#" class="card">
                 <img src="/static/images/insurance.png" alt="Card 1">
                 <p>I'm a paragraph. Click here to add your own text and edit me.</p>
-            </div>
-            <div class="card">
+            </a>
+            <a href="#" class="card">
                 <img src="/static/images/investment.png" alt="Card 2">
                 <p>I'm a paragraph. Click here to add your own text and edit me.</p>
-            </div>
-            <div class="card">
-                <img src="https://via.placeholder.com/100x200" alt="Card 3">
+            </a>
+            <a href="#" class="card">
+                <img src="/static/images/loan.png" alt="Card 3">
                 <p>I'm a paragraph. Click here to add your own text and edit me.</p>
-            </div>
+            </a>
         </div>
     </section>
 </body>
