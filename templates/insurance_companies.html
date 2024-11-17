@@ -140,7 +140,21 @@
     <div class="container text-center">
         <h1>Top 3 Companies</h1>
         <div id="companyList">
-            <!-- Company Cards will be dynamically added here -->
+            {% for company in companies %}
+                <div class="company-card">
+                    <h2>{{ company.CompanyName }}</h2>
+                    <p>Phone: {{ company.PhoneNumber }}</p>
+                    <p>Email: {{ company.Email }}</p>
+                    <p>Review: {{ company.Review }}</p>
+                    <p>Website: <a href="{{ company.WebsiteURL }}" target="_blank">Visit Website</a></p>
+                    <p>Plan: {{ company.PlanName }}</p>
+                    <p>Monthly Premium: ${{ company.PremiumMonthly }}</p>
+                    <p>Out-of-Pocket Cost: {{ company.OutOfPocketCost }}</p>
+                    <p>Payment Structure: {{ company.PaymentStructure }}</p>
+                    <p>Coverage: {{ company.CoverageType }}</p>
+                </div>
+            {% endfor %}
+        </div>
         </div>
     </div>
 
@@ -160,28 +174,28 @@
     </div>
 
     <script>
-        const companies = [
-            { name: "Google", description: "Click to view details.", details: "Founded: 1998 | Industry: Technology | Headquarters: Mountain View, CA" },
-            { name: "Apple", description: "Click to view details.", details: "Founded: 1976 | Industry: Technology | Headquarters: Cupertino, CA" },
-            { name: "Amazon", description: "Click to view details.", details: "Founded: 1994 | Industry: E-commerce | Headquarters: Seattle, WA" }
-        ];
+        // const companies = [
+        //     { name: "Google", description: "Click to view details.", details: "Founded: 1998 | Industry: Technology | Headquarters: Mountain View, CA" },
+        //     { name: "Apple", description: "Click to view details.", details: "Founded: 1976 | Industry: Technology | Headquarters: Cupertino, CA" },
+        //     { name: "Amazon", description: "Click to view details.", details: "Founded: 1994 | Industry: E-commerce | Headquarters: Seattle, WA" }
+        // ];
 
-        const companyList = document.getElementById("companyList");
+        // const companyList = document.getElementById("companyList");
 
-        companies.forEach((company, index) => {
-            const card = document.createElement("div");
-            card.classList.add("company-card");
-            card.innerHTML = `
-                <h2>${company.name}</h2>
-                <p>${company.description}</p>
-                <div class="company-details" id="details-${index}">${company.details}</div>
-            `;
-            card.addEventListener("click", () => {
-                const details = document.getElementById(`details-${index}`);
-                details.style.display = details.style.display === "none" || !details.style.display ? "block" : "none";
-            });
-            companyList.appendChild(card);
-        });
+        // companies.forEach((company, index) => {
+        //     const card = document.createElement("div");
+        //     card.classList.add("company-card");
+        //     card.innerHTML = `
+        //         <h2>${company.name}</h2>
+        //         <p>${company.description}</p>
+        //         <div class="company-details" id="details-${index}">${company.details}</div>
+        //     `;
+        //     card.addEventListener("click", () => {
+        //         const details = document.getElementById(`details-${index}`);
+        //         details.style.display = details.style.display === "none" || !details.style.display ? "block" : "none";
+        //     });
+        //     companyList.appendChild(card);
+        // });
 
         function toggleChat() {
             const chatBox = document.getElementById("chatBox");

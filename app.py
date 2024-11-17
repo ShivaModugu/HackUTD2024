@@ -230,16 +230,12 @@ def submit_quiz():
     
     # Fetch all results from the query
     results = cursor.fetchall()
-    
-    # Print results
-    for result in results:
-        print(result)
 
     # Close the cursor and connection
     cursor.close()
     connection.close()
     # Return a response (optional)
-    return redirect(url_for('insurance_companies'))
+    return render_template('insurance_companies.html', results=results)
 
 @app.route('/register', methods=['POST'])
 def register():
