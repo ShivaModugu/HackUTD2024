@@ -105,7 +105,8 @@ def parse_answers(array):
     WHERE 
         {where_condition}
     ORDER BY 
-        IC.CompanyName, IP.PlanName, PC.CoverageType;
+        IC.CompanyName, IP.PlanName, PC.CoverageType
+    LIMIT 3;
     """
     
     return sql_query
@@ -230,12 +231,16 @@ def submit_quiz():
     
     # Fetch all results from the query
     results = cursor.fetchall()
+    with open('knowledge_base/quiz_results.txt', 'w') as file:
+        for result in results:
+            # Write each result as a line in the file (customize based on your data)
+            file.write(str(result) + "\n")
 
     # Close the cursor and connection
     cursor.close()
     connection.close()
     # Return a response (optional)
-    return render_template('insurance_companies.html', results=results)
+    return render_template('insurance_companies.html')
 
 @app.route('/register', methods=['POST'])
 def register():
