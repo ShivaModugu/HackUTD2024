@@ -9,7 +9,7 @@ def get_db_connection():
     connection = mysql.connector.connect(
         host='localhost',       # Replace with your database host
         user='root',       # Replace with your database username
-        password='lalithya05', # Replace with your database password
+        password='7635Yearling!', # Replace with your database password
         database='hackathon_db',
         port=3306  # Replace with your database name
     )
@@ -230,7 +230,6 @@ def submit_quiz():
     
     # Fetch all results from the query
     results = cursor.fetchall()
-    print(results)
 
     # Close the cursor and connection
     cursor.close()
