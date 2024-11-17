@@ -20,6 +20,11 @@ def home():
 def insurance():
     return render_template("insurance.html")
 
+@app.route('/insurance_companies')
+def insurance_companies():
+    return render_template("insurance_companies.html")
+
+
 @app.route('/banking', methods=['GET', 'POST'])
 def banking():
     # Retrieve user info from the session
