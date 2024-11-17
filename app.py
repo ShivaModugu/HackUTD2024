@@ -1,9 +1,10 @@
 import re
 import mysql.connector
-from flask import Flask, render_template, request, redirect, url_for, session
+from flask import Flask, render_template, request, redirect, url_for, session, jsonify
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # Set a secret key for sessions
+results = {}
 
 def get_db_connection():
     connection = mysql.connector.connect(
@@ -130,7 +131,8 @@ def insurance():
 
 @app.route('/insurance_companies')
 def insurance_companies():
-    return render_template("insurance_companies.html")
+    global results
+    return render_template("insurance_companies.html", results=results)
 
 
 @app.route('/banking', methods=['GET', 'POST'])
@@ -219,6 +221,7 @@ def banking():
 
 @app.route('/submit-quiz', methods=['POST'])
 def submit_quiz():
+    global results
     # Get the JSON data from the request
     data = request.get_json()
     
@@ -240,7 +243,7 @@ def submit_quiz():
     cursor.close()
     connection.close()
     # Return a response (optional)
-    return render_template('insurance_companies.html')
+    return render_template('insurance_companies.html', results=results)
 
 @app.route('/register', methods=['POST'])
 def register():

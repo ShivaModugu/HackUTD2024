@@ -243,48 +243,7 @@
         </div>
     </div>
     <script>
-        const companies = [
-            {
-                CompanyName: 'Auto-Owners Insurance',
-                PhoneNumber: '517-323-1200',
-                Email: 'contact@auto-owners.com',
-                Review: 4.4,
-                WebsiteURL: 'https://www.auto-owners.com/',
-                PlanName: 'Premier Health',
-                PremiumMonthly: 270.00,
-                OutOfPocketCost: 'Low',
-                PaymentStructure: 'Higher Monthly',
-                BudgetPercentage: 7.20,
-                CoverageType: 'Health'
-            },
-            {
-                CompanyName: 'MassMutual',
-                PhoneNumber: '800-272-2216',
-                Email: 'info@massmutual.com',
-                Review: 4.4,
-                WebsiteURL: 'https://www.massmutual.com/',
-                PlanName: 'Prime Health',
-                PremiumMonthly: 265.00,
-                OutOfPocketCost: 'Low',
-                PaymentStructure: 'Higher Monthly',
-                BudgetPercentage: 6.80,
-                CoverageType: 'Health'
-            },
-            {
-                CompanyName: 'USAA',
-                PhoneNumber: '800-531-8722',
-                Email: 'service@usaa.com',
-                Review: 4.9,
-                WebsiteURL: 'https://www.usaa.com/',
-                PlanName: 'Health Shield',
-                PremiumMonthly: 200.00,
-                OutOfPocketCost: 'Low',
-                PaymentStructure: 'Higher Monthly',
-                BudgetPercentage: 6.00,
-                CoverageType: 'Health'
-            }
-        ];
-
+        const companies = JSON.parse('{{ results|tojson|safe }}');
         const companyList = document.getElementById("companyList");
         const popupOverlay = document.getElementById("popupOverlay");
         const popupTitle = document.getElementById("popupTitle");

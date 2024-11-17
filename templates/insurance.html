@@ -235,16 +235,21 @@
 
         // Submit the Quiz
         function submitQuiz() {
-                // Send the answers to the Flask backend
-                fetch('/submit-quiz', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ answers: selectedAnswers })
-                })
-                .then(window.location.href = "/insurance_companies");
-            }
+    // Send the answers to the Flask backend
+    fetch('/submit-quiz', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ answers: selectedAnswers })
+            })
+            .then(data => {
+                window.location.href = "/insurance_companies";  // Redirect to insurance companies page
+            })
+            .catch(error => {
+                console.error('Error:', error);  // Log any error to the console
+            });
+        }
     </script>
 </body>
 </html>
