@@ -17,14 +17,27 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #e0f0ff;
+    background-color: #0056b3; /* Blue background */
     padding: 10px 20px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    color: #fff; /* White text color */
 }
 
 .navbar .site-name {
     font-size: 1.5rem;
     font-weight: bold;
+    display: flex;
+    align-items: center;
+}
+
+.navbar .site-name img {
+    height: 30px;
+    margin-right: 10px; /* Spacing between logo and site name */
+}
+
+.navbar nav {
+    display: flex;
+    align-items: center;
 }
 
 .navbar nav ul {
@@ -35,13 +48,14 @@ body {
 
 .navbar nav ul li a {
     text-decoration: none;
-    color: #0056b3;
+    color: #fff;
     font-weight: bold;
+    font-size: 1rem;
     transition: color 0.3s ease;
 }
 
 .navbar nav ul li a:hover {
-    color: #003f8a;
+    color: #cce7ff; /* Slightly lighter blue on hover */
 }
 
 /* Title Section */
