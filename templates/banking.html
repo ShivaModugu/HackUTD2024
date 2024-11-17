@@ -14,8 +14,8 @@
             FinConnect
         </div>
         <nav>
-            <a href="banking">Home</a>
-            <a href="onboarding">Explore</a>
+            <a href="{{ url_for('banking') }}">Home</a>
+            <a href="{{ url_for('onboarding') }}">Explore</a>
             <a href="#">Sign Out</a>
         </nav>
     </header>
@@ -24,11 +24,11 @@
         <div class="balances">
             <div class="balance-card">
                 <h3>Checking</h3>
-                <p>$1,250.00</p>
+                <p>$<span id="checking-balance">{{ checking_balance }}</span></p>
             </div>
             <div class="balance-card">
                 <h3>Savings</h3>
-                <p>$500.00</p>
+                <p>$<span id="savings-balance">{{ savings_balance }}</span></p>
             </div>
         </div>
         <div class="transactions">
@@ -36,19 +36,19 @@
             <table>
                 <thead>
                     <tr>
+                        <th>Transaction Number</th>
                         <th>Recipient</th>
                         <th>Amount</th>
                     </tr>
                 </thead>
                 <tbody>
+                    {% for transaction in transactions %}
                     <tr>
-                        <td>Jane Smith</td>
-                        <td>$200.00</td>
+                        <td>{{ loop.index }}</td>
+                        <td>{{ transaction.split(':')[0].strip() }}</td>
+                        <td>${{ transaction.split(':')[1].strip() }}</td>
                     </tr>
-                    <tr>
-                        <td>Mark Johnson</td>
-                        <td>$150.00</td>
-                    </tr>
+                    {% endfor %}
                 </tbody>
             </table>
         </div>
@@ -63,16 +63,17 @@
         <div class="modal-content">
             <span class="close" id="closePaymentModal">&times;</span>
             <h3>Make Payment</h3>
-            <form>
+            <form action="{{ url_for('banking') }}" method="POST" id="paymentForm">
                 <label for="from-account">Make Payment From</label>
                 <select id="from-account" name="from-account">
-                    <option value="checking">Checking Account</option>
-                    <option value="savings">Savings Account</option>
+                    <option value="checking">Checking</option>
+                    <option value="savings">Savings</option>
                 </select>
                 <label for="recipient">Recipient</label>
-                <input type="text" id="recipient" placeholder="Enter recipient's name">
+                <input type="text" id="recipient" name="recipient" placeholder="Enter recipient's name" required>
                 <label for="amount">Amount</label>
-                <input type="number" id="amount" placeholder="Enter amount">
+                <input type="number" id="amount" name="amount" placeholder="Enter amount" required min="1" step="0.01">
+                <input type="hidden" name="action" value="payment">
                 <button type="submit" class="submit-button">Submit Payment</button>
             </form>
         </div>
@@ -83,27 +84,36 @@
         <div class="modal-content">
             <span class="close" id="closeTransferModal">&times;</span>
             <h3>Transfer Funds</h3>
-            <form>
+            <form action="{{ url_for('banking') }}" method="POST" id="transferForm">
                 <label for="from-account">Transfer From</label>
                 <select id="from-account" name="from-account">
-                    <option value="checking">Checking Account</option>
-                    <option value="savings">Savings Account</option>
+                    <option value="checking">Checking</option>
+                    <option value="savings">Savings</option>
                 </select>
                 <label for="to-account">Transfer To</label>
                 <select id="to-account" name="to-account">
-                    <option value="checking">Checking Account</option>
+                    <option value="checking">Checking</option>
+                    <option value="savings">Savings</option>
                     <option value="external">External Bank Account</option>
                 </select>
+                <!-- Fields for External Bank Account -->
+                <div id="external-bank-details" style="display: none;">
+                    <label for="bank-name">Bank Name</label>
+                    <input type="text" id="bank-name" name="bank-name" placeholder="Enter bank name" required>
+                    <label for="routing-number">Routing Number</label>
+                    <input type="text" id="routing-number" name="routing-number" placeholder="Enter routing number" required>
+                    <label for="account-number">Account Number</label>
+                    <input type="text" id="account-number" name="account-number" placeholder="Enter account number" required>
+                </div>
                 <label for="transfer-amount">Amount</label>
-                <input type="number" id="transfer-amount" placeholder="Enter amount">
-
+                <input type="number" id="transfer-amount" name="transfer-amount" placeholder="Enter amount" required min="1" step="0.01">
+                <input type="hidden" name="action" value="transfer">
                 <button type="submit" class="submit-button">Submit Transfer</button>
             </form>
         </div>
     </div>
 
     <script>
-        // JavaScript to handle modal functionality
         document.addEventListener('DOMContentLoaded', () => {
             const makePaymentBtn = document.getElementById('makePaymentBtn');
             const transferFundsBtn = document.getElementById('transferFundsBtn');
@@ -111,6 +121,11 @@
             const transferModal = document.getElementById('transferModal');
             const closePaymentModal = document.getElementById('closePaymentModal');
             const closeTransferModal = document.getElementById('closeTransferModal');
+            const toAccountSelect = document.getElementById('to-account');
+            const externalBankDetails = document.getElementById('external-bank-details');
+
+            const paymentForm = document.getElementById('paymentForm');
+            const transferForm = document.getElementById('transferForm');
 
             // Open payment modal
             makePaymentBtn.addEventListener('click', (e) => {
@@ -140,6 +155,37 @@
                     paymentModal.style.display = 'none';
                 } else if (e.target === transferModal) {
                     transferModal.style.display = 'none';
+                }
+            });
+
+            // Show external bank account details when "External Bank Account" is selected
+            toAccountSelect.addEventListener('change', () => {
+                if (toAccountSelect.value === 'external') {
+                    externalBankDetails.style.display = 'block';
+                } else {
+                    externalBankDetails.style.display = 'none';
+                }
+            });
+
+            // Payment form validation
+            paymentForm.addEventListener('submit', (e) => {
+                const amountInput = document.getElementById('amount');
+                const amount = parseFloat(amountInput.value);
+
+                if (isNaN(amount) || amount <= 0) {
+                    alert('Please enter a valid amount greater than 0.');
+                    e.preventDefault();  // Prevent form submission
+                }
+            });
+
+            // Transfer form validation
+            transferForm.addEventListener('submit', (e) => {
+                const transferAmountInput = document.getElementById('transfer-amount');
+                const transferAmount = parseFloat(transferAmountInput.value);
+
+                if (isNaN(transferAmount) || transferAmount <= 0) {
+                    alert('Please enter a valid amount greater than 0.');
+                    e.preventDefault();  // Prevent form submission
                 }
             });
         });

@@ -207,3 +207,32 @@ main {
     cursor: pointer;
     color: #333;
 }
+
+/* Styled Dropdowns */
+select {
+    width: 100%;
+    padding: 12px 20px;
+    font-size: 1rem;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    background-color: #fff;
+    appearance: none;  /* Remove default arrow */
+    -webkit-appearance: none; /* Safari */
+    -moz-appearance: none; /* Firefox */
+    color: #333;
+    cursor: pointer;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+select:focus {
+    border-color: #0056b3;
+    box-shadow: 0 0 5px rgba(0, 86, 179, 0.5);
+}
+
+select:hover {
+    border-color: #0056b3;
+}
+
+#external-bank-details {
+    display: none;
+}
