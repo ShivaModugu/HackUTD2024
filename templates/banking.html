@@ -24,11 +24,11 @@
         <div class="balances">
             <div class="balance-card">
                 <h3>Checking</h3>
-                <p>$<span id="checking-balance">{{ checking_balance }}</span></p>
+                <p>$<span id="checking-balance">{{ '%.2f' | format(checking_balance) }}</span></p>
             </div>
             <div class="balance-card">
                 <h3>Savings</h3>
-                <p>$<span id="savings-balance">{{ savings_balance }}</span></p>
+                <p>$<span id="checking-balance">{{ '%.2f' | format(savings_balance) }}</span></p>
             </div>
         </div>
         <div class="transactions">

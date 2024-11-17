@@ -251,8 +251,8 @@ def banking():
                     return "Insufficient funds in Savings Account", 400
 
         # Store updated balances and transactions in the session
-        session['checking_balance'] = checking_balance
-        session['savings_balance'] = savings_balance
+        session['checking_balance'] = round(checking_balance, 2)
+        session['savings_balance'] = round(savings_balance, 2)
         session['transactions'] = transactions
 
         # Redirect back to banking page with updated info
