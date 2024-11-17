@@ -230,6 +230,7 @@ def submit_quiz():
     
     # Fetch all results from the query
     results = cursor.fetchall()
+    print(results)
 
     # Close the cursor and connection
     cursor.close()
