@@ -42,7 +42,7 @@ header nav a {
 }
 
 header nav a:hover {
-    text-decoration: underline;
+    color: #cce7ff;
 }
 
 main {
