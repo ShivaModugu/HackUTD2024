@@ -141,18 +141,10 @@
         <h1>Top 3 Companies</h1>
         <div id="companyList">
             {% for company in results %}
-                <div class="company-card">
-                    <h2>{{ company.CompanyName }}</h2>
-                    <p>Phone: {{ company.PhoneNumber }}</p>
-                    <p>Email: {{ company.Email }}</p>
-                    <p>Review: {{ company.Review }}</p>
-                    <p>Website: <a href="{{ company.WebsiteURL }}" target="_blank">Visit Website</a></p>
-                    <p>Plan: {{ company.PlanName }}</p>
-                    <p>Monthly Premium: ${{ company.PremiumMonthly }}</p>
-                    <p>Out-of-Pocket Cost: {{ company.OutOfPocketCost }}</p>
-                    <p>Payment Structure: {{ company.PaymentStructure }}</p>
-                    <p>Coverage: {{ company.CoverageType }}</p>
-                </div>
+                <script>
+                    console.log(company)
+                </script>
+                <p>{{company}}</p>
             {% endfor %}
         </div>
         </div>

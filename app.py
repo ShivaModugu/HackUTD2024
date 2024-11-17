@@ -7,9 +7,9 @@ app.secret_key = 'your_secret_key'  # Set a secret key for sessions
 
 def get_db_connection():
     connection = mysql.connector.connect(
-        host='127.0.0.1',       # Replace with your database host
+        host='localhost',       # Replace with your database host
         user='root',       # Replace with your database username
-        password='Adsfadsf@123', # Replace with your database password
+        password='lalithya05', # Replace with your database password
         database='hackathon_db',
         port=3306  # Replace with your database name
     )
