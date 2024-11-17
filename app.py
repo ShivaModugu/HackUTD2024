@@ -10,7 +10,7 @@ def get_db_connection():
         host='127.0.0.1',       # Replace with your database host
         user='root',       # Replace with your database username
         password='Adsfadsf@123', # Replace with your database password
-        database='hackthon_db',
+        database='hackathon_db',
         port=3306  # Replace with your database name
     )
     return connection
