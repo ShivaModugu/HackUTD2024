@@ -16,6 +16,10 @@ def onboarding():
 def home():
     return render_template("home.html")
 
+@app.route('/insurance')
+def insurance():
+    return render_template("insurance.html")
+
 @app.route('/banking', methods=['GET', 'POST'])
 def banking():
     # Retrieve user info from the session

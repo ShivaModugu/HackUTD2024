@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Quiz Carousel</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* General Styling */
+        body {
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+            overflow-x: hidden;
+            background: linear-gradient(120deg, #022c43, #1b98e0, #00a8cc, #007991);
+            background-size: 200% 200%;
+            animation: backgroundAnimation 8s infinite ease-in-out;
+        }
+
+        @keyframes backgroundAnimation {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        .carousel-container {
+            max-width: 600px;
+            margin: 5% auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            overflow: hidden;
+        }
+
+        .quiz-image {
+            border-radius: 10px;
+            margin-bottom: 20px;
+            max-height: 300px;
+            object-fit: cover;
+            width: 100%;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .quiz-question {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #333;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .option-btn {
+            width: 100%;
+            padding: 10px;
+            font-size: 1rem;
+            border-radius: 8px;
+            background-color: #0056b3;
+            color: #fff;
+            border: none;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        .option-btn:hover {
+            background-color: #003f7f;
+            transform: scale(1.05);
+        }
+
+        .option-btn.selected {
+            background-color: #28a745;
+            color: #fff;
+        }
+
+        .option-btn.selected::after {
+            content: "✔";
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.2rem;
+            color: white;
+        }
+
+        #rippleMessage {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 2rem;
+            font-weight: bold;
+            color: #fff;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 20px 40px;
+            border-radius: 10px;
+            display: none;
+            z-index: 1000;
+        }
+
+        #submitSection {
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="carousel-container">
+        <div id="quizCarousel" class="carousel">
+            <div class="carousel-inner">
+                <!-- Slides will be dynamically injected here -->
+            </div>
+            <div class="d-flex justify-content-between mt-4">
+                <button class="btn btn-primary" onclick="goToPreviousSlide()">❮ Previous</button>
+                <button class="btn btn-primary" onclick="goToNextSlide()">Next ❯</button>
+            </div>
+        </div>
+        <div id="submitSection" class="text-center mt-4 d-none">
+            <button class="btn btn-success btn-lg" onclick="submitQuiz()">Submit Quiz</button>
+        </div>
+    </div>
+
+    <div id="rippleMessage">Quiz Submitted!</div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Quiz Data
+        const questions = [
+            {
+                question: "What is the capital of France?",
+                image: "https://via.placeholder.com/400x300?text=Paris",
+                options: ["Paris", "London", "Berlin", "Rome"],
+            },
+            {
+                question: "Which planet is known as the Red Planet?",
+                image: "https://via.placeholder.com/400x300?text=Mars",
+                options: ["Venus", "Mars", "Jupiter", "Saturn"],
+            },
+            {
+                question: "What is the chemical symbol for water?",
+                image: "https://via.placeholder.com/400x300?text=H2O",
+                options: ["H2O", "O2", "CO2", "NaCl"],
+            },
+            {
+                question: "Who painted the Mona Lisa?",
+                image: "https://via.placeholder.com/400x300?text=DaVinci",
+                options: ["Van Gogh", "Leonardo Da Vinci", "Picasso", "Monet"],
+            },
+            {
+                question: "What is the largest mammal?",
+                image: "https://via.placeholder.com/400x300?text=Whale",
+                options: ["Elephant", "Blue Whale", "Shark", "Dolphin"],
+            },
+        ];
+
+        let currentSlide = 0;
+        const selectedAnswers = [];
+
+        const carouselInner = document.querySelector(".carousel-inner");
+        const submitSection = document.getElementById("submitSection");
+        const rippleMessage = document.getElementById("rippleMessage");
+
+        // Populate Quiz Carousel
+        questions.forEach((q, index) => {
+            const slide = document.createElement("div");
+            slide.classList.add("carousel-item");
+            if (index === 0) slide.classList.add("active");
+            slide.innerHTML = `
+                <img src="${q.image}" class="quiz-image" alt="Question Image">
+                <h2 class="quiz-question">${q.question}</h2>
+                <div class="options-container">
+                    ${q.options
+                        .map(
+                            (option) =>
+                                `<button class="btn option-btn" onclick="selectOption('${option}', ${index}, this)">${option}</button>`
+                        )
+                        .join("")}
+                </div>
+            `;
+            carouselInner.appendChild(slide);
+        });
+
+        // Select an Option
+        function selectOption(option, index, element) {
+            selectedAnswers[index] = option; // Save the selected answer
+            // Highlight the selected option
+            const buttons = element.parentNode.querySelectorAll(".option-btn");
+            buttons.forEach((btn) => btn.classList.remove("selected"));
+            element.classList.add("selected");
+        }
+
+        // Move to the Next Slide
+        function goToNextSlide() {
+            const slides = document.querySelectorAll(".carousel-item");
+            if (currentSlide < slides.length - 1) {
+                slides[currentSlide].classList.remove("active");
+                currentSlide++;
+                slides[currentSlide].classList.add("active");
+                toggleSubmitButton();
+            }
+        }
+
+        // Move to the Previous Slide
+        function goToPreviousSlide() {
+            const slides = document.querySelectorAll(".carousel-item");
+            if (currentSlide > 0) {
+                slides[currentSlide].classList.remove("active");
+                currentSlide--;
+                slides[currentSlide].classList.add("active");
+                toggleSubmitButton();
+            }
+        }
+
+        // Show the Submit Button
+        function toggleSubmitButton() {
+            if (currentSlide === questions.length - 1) {
+                submitSection.classList.remove("d-none");
+            } else {
+                submitSection.classList.add("d-none");
+            }
+        }
+
+        // Submit the Quiz
+        function submitQuiz() {
+            console.log("Selected Answers:", selectedAnswers);
+            rippleMessage.style.display = "block";
+            setTimeout(() => {
+                rippleMessage.style.display = "none";
+                window.location.href = "new_page.html"; // Redirect to the new page
+            }, 2000);
+        }
+    </script>
+</body>
+</html>
