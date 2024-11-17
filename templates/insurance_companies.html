@@ -29,12 +29,10 @@
             }
         }
 
-        /* Navbar Styling */
         .navbar {
             background-color: #0056b3;
             color: white;
             padding: 10px 20px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
 
         .navbar .site-name {
@@ -63,10 +61,6 @@
             font-weight: bold;
         }
 
-        .navbar nav a:hover {
-            color: #cce7ff;
-        }
-
         .container {
             margin-top: 50px;
         }
@@ -78,6 +72,7 @@
             padding: 20px;
             margin: 20px 0;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
         }
 
         .company-card:hover {
@@ -85,17 +80,47 @@
             box-shadow: 0 6px 15px rgba(0, 0, 0, 0.5);
         }
 
-        .btn {
-            background-color: #0056b3;
-            color: white;
-            border-radius: 5px;
-            transition: background-color 0.3s ease;
+        .company-details {
+            display: none;
+            margin-top: 10px;
         }
 
-        .btn:hover {
-            background-color: #003f7f;
-        }
-    </style>
+        .chat-bubble {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 50px; /* Adjusted size */
+    height: 50px; /* Adjusted size */
+    background-color: #0056b3;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+    z-index: 1000;
+}
+
+.chat-bubble img {
+    width: 30px; /* Scaled to fit the bubble size */
+    height: 30px; /* Scaled to fit the bubble size */
+}
+
+.chat-box {
+    position: fixed;
+    bottom: 90px;
+    right: 20px;
+    width: 300px;
+    max-height: 400px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    display: none;
+    flex-direction: column;
+    overflow: hidden;
+    z-index: 1000; /* Ensure it stays above other elements */
+}    
+</style>
 </head>
 <body>
     <!-- Navbar -->
@@ -105,9 +130,9 @@
             FinConnect
         </a>
         <nav>
-            <a href="#">Home</a>
-            <a href="#">Explore</a>
-            <a href="#">Sign Out</a>
+            <a href="banking">Home</a>
+            <a href="onboarding">Explore</a>
+            <a href="home">Sign Out</a>
         </nav>
     </header>
 
@@ -119,68 +144,64 @@
         </div>
     </div>
 
+    <!-- Chat Bubble -->
+    <div class="chat-bubble" onclick="toggleChat()">
+        <img src="/static/images/bubble.webp" alt="Chat">
+    </div>
+
+    <!-- Chat Box -->
+    <div class="chat-box" id="chatBox">
+        <div class="chat-header">Chat with Us</div>
+        <div class="chat-body" id="chatBody"></div>
+        <div class="chat-input">
+            <input type="text" id="chatMessage" placeholder="Type a message...">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+
     <script>
-        // Define the Top 3 Companies
         const companies = [
-            {
-                name: "Google",
-                description: "A multinational technology company specializing in Internet-related services and products.",
-                keyData: {
-                    industry: "Technology",
-                    founded: "1998",
-                    headquarters: "Mountain View, California, USA",
-                },
-            },
-            {
-                name: "Apple",
-                description: "A technology company that designs, manufactures, and markets consumer electronics and software.",
-                keyData: {
-                    industry: "Technology",
-                    founded: "1976",
-                    headquarters: "Cupertino, California, USA",
-                },
-            },
-            {
-                name: "Amazon",
-                description: "An e-commerce and cloud computing company focusing on online retail and web services.",
-                keyData: {
-                    industry: "E-commerce, Cloud Computing",
-                    founded: "1994",
-                    headquarters: "Seattle, Washington, USA",
-                },
-            },
+            { name: "Google", description: "Click to view details.", details: "Founded: 1998 | Industry: Technology | Headquarters: Mountain View, CA" },
+            { name: "Apple", description: "Click to view details.", details: "Founded: 1976 | Industry: Technology | Headquarters: Cupertino, CA" },
+            { name: "Amazon", description: "Click to view details.", details: "Founded: 1994 | Industry: E-commerce | Headquarters: Seattle, WA" }
         ];
 
-        // Dynamically Create Company Cards
         const companyList = document.getElementById("companyList");
 
         companies.forEach((company, index) => {
             const card = document.createElement("div");
-            card.classList.add("company-card", "text-start", "p-4");
-
+            card.classList.add("company-card");
             card.innerHTML = `
-                <h2>${index + 1}. ${company.name}</h2>
+                <h2>${company.name}</h2>
                 <p>${company.description}</p>
-                <button class="btn" onclick="showDetails(${index})">View Details</button>
-                <div id="details-${index}" class="mt-3 d-none">
-                    <ul>
-                        <li><strong>Industry:</strong> ${company.keyData.industry}</li>
-                        <li><strong>Founded:</strong> ${company.keyData.founded}</li>
-                        <li><strong>Headquarters:</strong> ${company.keyData.headquarters}</li>
-                    </ul>
-                </div>
+                <div class="company-details" id="details-${index}">${company.details}</div>
             `;
-
+            card.addEventListener("click", () => {
+                const details = document.getElementById(`details-${index}`);
+                details.style.display = details.style.display === "none" || !details.style.display ? "block" : "none";
+            });
             companyList.appendChild(card);
         });
 
-        // Function to Show/Hide Details
-        function showDetails(index) {
-            const detailsDiv = document.getElementById(`details-${index}`);
-            if (detailsDiv.classList.contains("d-none")) {
-                detailsDiv.classList.remove("d-none");
-            } else {
-                detailsDiv.classList.add("d-none");
+        function toggleChat() {
+            const chatBox = document.getElementById("chatBox");
+            chatBox.style.display = chatBox.style.display === "none" || !chatBox.style.display ? "flex" : "none";
+        }
+
+        function sendMessage() {
+            const chatBody = document.getElementById("chatBody");
+            const chatMessage = document.getElementById("chatMessage");
+            if (chatMessage.value.trim() !== "") {
+                const message = document.createElement("div");
+                message.textContent = chatMessage.value;
+                message.style.marginBottom = "10px";
+                message.style.background = "#0056b3";
+                message.style.color = "white";
+                message.style.padding = "10px";
+                message.style.borderRadius = "5px";
+                chatBody.appendChild(message);
+                chatMessage.value = "";
+                chatBody.scrollTop = chatBody.scrollHeight;
             }
         }
     </script>

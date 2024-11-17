@@ -8,7 +8,7 @@
 body {
     font-family: 'Roboto', sans-serif;
     background: linear-gradient(135deg, #003366, #0066cc);
-    color: #fff;
+    color: #00545d;
     overflow: hidden;
 }
 
@@ -27,8 +27,8 @@ body {
 }
 
 .shark {
-    width: 100px;
-    animation: swim 3s infinite linear;
+    width: 300px;
+    animation: swim 8s infinite linear;
 }
 
 @keyframes swim {
