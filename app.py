@@ -1,7 +1,103 @@
+import re
 from flask import Flask, render_template, request, redirect, url_for, session
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # Set a secret key for sessions
+
+def parse_answers(array):
+    # Initialize conditions for each category
+    conditions = {
+        'Additional': None,
+        'PaymentStructure': None,
+        'CoverageType': None,
+        'PremiumRange': None
+    }
+
+    # Define mappings based on the answer choices
+
+    # Payment Structure (e.g., 'B' or 'A')
+    if 'A.' in array[0]:
+        conditions['Additional'] = ""
+    elif 'B.' in array[0]:
+        conditions['Additional'] = "IC.CompanyID IN (SELECT CompanyID FROM InsurancePlans GROUP BY CompanyID HAVING COUNT(PlanID) > 1)"
+    elif 'C.' in array[0]:
+        conditions['Additional'] = "IC.Review > 4.0"
+    
+    if 'B.' in array[1]:  # Higher monthly premiums with lower out-of-pocket costs
+        conditions['PaymentStructure'] = "IP.PaymentStructure = 'Higher Monthly'"
+        conditions['OutOfPocketCost'] = "IP.OutOfPocketCost = 'Low'"
+    elif 'A.' in array[1]:  # Affordable premiums (default if needed)
+        conditions['PaymentStructure'] = "IP.PaymentStructure = 'Lower Monthly'"
+        conditions['OutOfPocketCost'] = "IP.OutOfPocketCost = 'High'"
+    elif 'C.' in array[1]:
+        conditions['PaymentStructure'] = "IP.PaymentStructure = 'Flexible'"
+        conditions['OutOfPocketCost'] = "IP.OutOfPocketCost = 'Flexible'"
+
+    # Risk Type (e.g., 'D' for property insurance)
+    if 'D.' in array[2]:  # Property damage or liability (property insurance)
+        conditions['CoverageType'] = "PC.CoverageType = 'Property'"
+    elif 'C.' in array[2]:  # Health insurance (if we had such an entry)
+        conditions['CoverageType'] = "PC.CoverageType = 'Auto'"
+    elif 'B.' in array[2]:  # Property damage or liability (property insurance)
+        conditions['CoverageType'] = "PC.CoverageType = 'Life'"
+    elif 'A.' in array[2]:  # Health insurance (if we had such an entry)
+        conditions['CoverageType'] = "PC.CoverageType = 'Health'"
+
+    # Income Range (e.g., "$50,000–$75,000")
+    income_match = re.search(r"\$\d{1,3}(?:,\d{3})*–\$\d{1,3}(?:,\d{3})*", array[3])  # Detecting the income range
+    budget_match = re.search(r"Less\s+than\s+(\d{1,2})%\s+of\s+annual\s+income", array[4])  # Detecting the budget percentage range
+    if income_match and budget_match:
+        upper = income_match.group(0).split('–')[1]  # Get the upper value (after the "–")
+        
+        # Get the percentage value from the budget match
+        upper_percentage = int(budget_match.group(1))  # Extract the percentage value
+        
+        # Parse the upper income value into an integer (remove '$' and ',' symbols)
+        upper_value = int(upper.replace('$', '').replace(',', ''))
+        
+        # Calculate the upper premium value based on the upper percentage
+        upper_premium = upper_value * (upper_percentage / 100)  # Apply the upper percentage for the upper bound
+        
+        # Construct the premium range condition for only the upper value
+        conditions['PremiumRange'] = f"IP.PremiumMonthly <= {upper_premium}"
+
+    # Construct the WHERE clause dynamically
+    where_clauses = []
+
+    for key, condition in conditions.items():
+        if condition:
+            where_clauses.append(condition)
+
+    # Join the WHERE clauses with AND
+    where_condition = " AND ".join(where_clauses)
+
+    # Construct the final SQL query
+    sql_query = f"""
+    SELECT 
+        IC.CompanyName, 
+        IC.PhoneNumber, 
+        IC.Email, 
+        IC.Review, 
+        IC.WebsiteURL, 
+        IP.PlanName, 
+        IP.PremiumMonthly, 
+        IP.OutOfPocketCost, 
+        IP.PaymentStructure, 
+        IP.BudgetPercentage, 
+        PC.CoverageType
+    FROM 
+        InsuranceCompanies IC
+    JOIN 
+        InsurancePlans IP ON IC.CompanyID = IP.CompanyID
+    JOIN 
+        PlanCoverage PC ON IP.PlanID = PC.PlanID
+    WHERE 
+        {where_condition}
+    ORDER BY 
+        IC.CompanyName, IP.PlanName, PC.CoverageType;
+    """
+    
+    return sql_query
 
 @app.route('/')
 @app.route('/index')
@@ -109,6 +205,18 @@ def banking():
     return render_template("banking.html", name=name, checking_balance=checking_balance,
                            savings_balance=savings_balance, transactions=transactions)
 
+@app.route('/submit-quiz', methods=['POST'])
+def submit_quiz():
+    # Get the JSON data from the request
+    data = request.get_json()
+    
+    # Get the selected answers from the request
+    selected_answers = data.get('answers')
+    query = parse_answers(selected_answers)
+    print(query)
+    # Return a response (optional)
+    return redirect(url_for('insurance_companies'))
+
 @app.route('/register', methods=['POST'])
 def register():
     name = request.form.get('name')
@@ -118,7 +226,7 @@ def register():
     session['transactions'] = []           # Empty transaction history
     return redirect(url_for('banking'))
 
-@app.route('/login', methods=['POST'])
+@app.route('/login', methods=['POST', 'GET'])
 def login():
     email = request.form.get('email')
     name = email.split('.')[0].capitalize()

@@ -141,29 +141,29 @@
         // Quiz Data
         const questions = [
             {
-                question: "What is the capital of France?",
+                question: "What is the most important factor when choosing an insurance provider?",
                 image: "https://via.placeholder.com/400x300?text=Paris",
-                options: ["Paris", "London", "Berlin", "Rome"],
+                options: ["A. Affordable Premiums", "B. Comprehensive coverage options", "C. Reputation and reliability"],
             },
             {
-                question: "Which planet is known as the Red Planet?",
+                question: "What is your preffered payment structure for insurance?",
                 image: "https://via.placeholder.com/400x300?text=Mars",
-                options: ["Venus", "Mars", "Jupiter", "Saturn"],
+                options: ["A. Lower monthly premiums with higher out-of-pocket costs", "B. Higher monthly premiums with lower out-of-pocket costs", "C. Flexible options depending on the coverage"],
             },
             {
-                question: "What is the chemical symbol for water?",
+                question: "What type of risks or expenses concern you the most?",
                 image: "https://via.placeholder.com/400x300?text=H2O",
-                options: ["H2O", "O2", "CO2", "NaCl"],
+                options: ["A. Health and medical expenses (health insurance)", "B. Financial security for loved ones (life insurance)", "C. Auto accidents or repairs (auto insurance)", "D. Property damage or liability (property insurance)"],
             },
             {
-                question: "Who painted the Mona Lisa?",
+                question: "What is your annual income range?",
                 image: "https://via.placeholder.com/400x300?text=DaVinci",
-                options: ["Van Gogh", "Leonardo Da Vinci", "Picasso", "Monet"],
+                options: ["A. Less than 25k", "B. $25,000–$50,000", "C. $50,000–$75,000", "D. $75,000–$100,000", "E. 100k+"],
             },
             {
-                question: "What is the largest mammal?",
+                question: "What is your budget range for your insurance plan?",
                 image: "https://via.placeholder.com/400x300?text=Whale",
-                options: ["Elephant", "Blue Whale", "Shark", "Dolphin"],
+                options: ["A. Less than 5% of annual income", "B. Less than 10% of annual income", "C. Less than 15% of annual income", " D. Less than 20% of annual income"],
             },
         ];
 
@@ -236,13 +236,16 @@
 
         // Submit the Quiz
         function submitQuiz() {
-            console.log("Selected Answers:", selectedAnswers);
-            rippleMessage.style.display = "block";
-            setTimeout(() => {
-                rippleMessage.style.display = "none";
-                window.location.href = "insurance_companies"; // Redirect to the new page
-            }, 2000);
-        }
+                // Send the answers to the Flask backend
+                fetch('/submit-quiz', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ answers: selectedAnswers })
+                })
+                .then(window.location.href = "/insurance_companies");
+            }
     </script>
 </body>
 </html>
