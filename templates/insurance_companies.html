@@ -200,13 +200,13 @@
     <header class="navbar">
         <div class="site-name">
             <img src="/static/images/logo.png" alt="Logo">
-            MyWebsite
+            FinConnect
         </div>
         <nav>
             <ul>
-                <li><a href="#">Home</a></li>
-                <li><a href="#">Explore</a></li>
-                <li><a href="#">Contact</a></li>
+                <li><a href="banking">Home</a></li>
+                <li><a href="insurance">Explore</a></li>
+                <li><a href="home">Sign Out</a></li>
             </ul>
         </nav>
     </header>
@@ -287,21 +287,50 @@
         }
 
         function sendMessage() {
-            const chatBody = document.getElementById("chatBody");
-            const chatMessage = document.getElementById("chatMessage");
-            if (chatMessage.value.trim() !== "") {
-                const message = document.createElement("div");
-                message.textContent = chatMessage.value;
-                message.style.marginBottom = "10px";
-                message.style.background = "#0056b3";
-                message.style.color = "white";
-                message.style.padding = "10px";
-                message.style.borderRadius = "5px";
-                chatBody.appendChild(message);
+    const chatBody = document.getElementById("chatBody");
+    const chatMessage = document.getElementById("chatMessage");
+    if (chatMessage.value.trim() !== "") {
+        const userMessage = chatMessage.value;
+
+        // Display the user message in the chat body
+        const message = document.createElement("div");
+        message.textContent = userMessage;
+        message.style.marginBottom = "10px";
+        message.style.background = "#0056b3";
+        message.style.color = "white";
+        message.style.padding = "10px";
+        message.style.borderRadius = "5px";
+        chatBody.appendChild(message);
+
+        // Send the message to the backend (assumes a POST endpoint /send-query exists)
+        fetch('/send-query', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ question: userMessage }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Display the assistant's response in the chat
+                const assistantMessage = document.createElement("div");
+                assistantMessage.textContent = data.response;
+                assistantMessage.style.marginBottom = "10px";
+                assistantMessage.style.background = "#1b98e0";
+                assistantMessage.style.color = "white";
+                assistantMessage.style.padding = "10px";
+                assistantMessage.style.borderRadius = "5px";
+                chatBody.appendChild(assistantMessage);
+
+                // Clear the input field
                 chatMessage.value = "";
                 chatBody.scrollTop = chatBody.scrollHeight;
-            }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
         }
+    }
     </script>
 </body>
 </html>

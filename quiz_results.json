@@ -1,0 +1,41 @@
+[
+    {
+        "CompanyName": "Auto-Owners Insurance",
+        "PhoneNumber": "517-323-1200",
+        "Email": "contact@auto-owners.com",
+        "Review": 4.4,
+        "WebsiteURL": "https://www.auto-owners.com",
+        "PlanName": "Premier Health",
+        "PremiumMonthly": 270.0,
+        "OutOfPocketCost": "Low",
+        "PaymentStructure": "Higher Monthly",
+        "BudgetPercentage": 7.2,
+        "CoverageType": "Health"
+    },
+    {
+        "CompanyName": "Health Net",
+        "PhoneNumber": "888-123-2345",
+        "Email": "support@healthnet.com",
+        "Review": 4.3,
+        "WebsiteURL": "https://www.healthnet.com",
+        "PlanName": "Executive Plan",
+        "PremiumMonthly": 300.0,
+        "OutOfPocketCost": "Low",
+        "PaymentStructure": "Higher Monthly",
+        "BudgetPercentage": 7.7,
+        "CoverageType": "Health"
+    },
+    {
+        "CompanyName": "MassMutual",
+        "PhoneNumber": "800-272-2216",
+        "Email": "info@massmutual.com",
+        "Review": 4.4,
+        "WebsiteURL": "https://www.massmutual.com",
+        "PlanName": "Prime Health",
+        "PremiumMonthly": 265.0,
+        "OutOfPocketCost": "Low",
+        "PaymentStructure": "Higher Monthly",
+        "BudgetPercentage": 6.8,
+        "CoverageType": "Health"
+    }
+]

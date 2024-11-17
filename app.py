@@ -1,10 +1,52 @@
 import re
 import mysql.connector
 from flask import Flask, render_template, request, redirect, url_for, session, jsonify
+import openai
+import json
+from decimal import Decimal
+
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # Set a secret key for sessions
 results = {}
+
+# Initialize the OpenAI client
+client = openai.OpenAI(
+    api_key="81515365-a441-4726-8b1a-5401c5ea51a3",
+    base_url="https://api.sambanova.ai/v1",
+)
+
+# Function to send a message to the chatbot and get a response
+def chat_with_assistant(user_message, quiz_data):
+    response = client.chat.completions.create(
+        model='Meta-Llama-3.1-8B-Instruct',
+        messages=[
+            {"role": "system", "content": "You are a helpful assistant. Here is some quiz data:" + str(quiz_data) +  "in a dictionary format to interpret for the user"},
+            {"role": "user", "content": user_message}
+        ],
+        temperature=0.1,
+        top_p=0.1
+    )
+    return response.choices[0].message.content
+
+def load_quiz_data():
+    with open('quiz_results.json', 'r') as file:
+        return json.load(file)
+
+# Function to handle insurance-related questions
+@app.route('/send-query', methods=['POST'])
+def send_query():
+    data = request.get_json()
+    user_question = data.get('question')
+    
+    # Load the quiz data once per request
+    quiz_data = load_quiz_data()
+    
+    if user_question:
+        assistant_response = chat_with_assistant(user_question, quiz_data)
+        return jsonify({'response': assistant_response})
+    else:
+        return jsonify({'error': 'No question provided'}), 400
 
 def get_db_connection():
     connection = mysql.connector.connect(
@@ -218,6 +260,14 @@ def banking():
 
     return render_template("banking.html", name=name, checking_balance=checking_balance,
                            savings_balance=savings_balance, transactions=transactions)
+                           
+def transform_to_ordinary_dict(data):
+    # Iterate through each dictionary and convert Decimal values to float
+    for entry in data:
+        for key, value in entry.items():
+            if isinstance(value, Decimal):
+                entry[key] = float(value)
+    return data
 
 @app.route('/submit-quiz', methods=['POST'])
 def submit_quiz():
@@ -234,10 +284,11 @@ def submit_quiz():
     
     # Fetch all results from the query
     results = cursor.fetchall()
-    with open('knowledge_base/quiz_results.txt', 'w') as file:
-        for result in results:
-            # Write each result as a line in the file (customize based on your data)
-            file.write(str(result) + "\n")
+    ordinary_data = transform_to_ordinary_dict(results)
+    
+    # Dump the results into a JSON file
+    with open('quiz_results.json', 'w') as file:
+        json.dump(ordinary_data, file, indent=4)
 
     # Close the cursor and connection
     cursor.close()
