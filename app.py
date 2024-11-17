@@ -1,8 +1,19 @@
 import re
+import mysql.connector
 from flask import Flask, render_template, request, redirect, url_for, session
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # Set a secret key for sessions
+
+def get_db_connection():
+    connection = mysql.connector.connect(
+        host='127.0.0.1',       # Replace with your database host
+        user='root',       # Replace with your database username
+        password='Adsfadsf@123', # Replace with your database password
+        database='hackthon_db',
+        port=3306  # Replace with your database name
+    )
+    return connection
 
 def parse_answers(array):
     # Initialize conditions for each category
@@ -213,7 +224,20 @@ def submit_quiz():
     # Get the selected answers from the request
     selected_answers = data.get('answers')
     query = parse_answers(selected_answers)
-    print(query)
+    connection = get_db_connection()
+    cursor = connection.cursor(dictionary=True)  # Use dictionary to get results as a dictionary
+    cursor.execute(query)
+    
+    # Fetch all results from the query
+    results = cursor.fetchall()
+    
+    # Print results
+    for result in results:
+        print(result)
+
+    # Close the cursor and connection
+    cursor.close()
+    connection.close()
     # Return a response (optional)
     return redirect(url_for('insurance_companies'))
 
